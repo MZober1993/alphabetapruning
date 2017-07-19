@@ -1,5 +1,6 @@
 package model;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,14 +33,16 @@ public class ModelTest {
         Double alphaA = seminarExample.getPruneValue();
         GenericTree b = seminarExample.getA();
         GenericTree c = seminarExample.getB();
+        Node e = (Node) b.getB();
+        Node g = (Node) c.getB();
 
         Double alphaB = b.getPruneValue();
         Double alphaC = c.getPruneValue();
 
         Double alphaD = ((Node ) b.getA()).getPruneValue();
-        Double alphaE = ((Node ) b.getB()).getPruneValue();
+        Double alphaE = e.getPruneValue();
         Double alphaF = ((Node ) c.getA()).getPruneValue();
-        Double alphaG = ((Node ) c.getB()).getPruneValue();
+        Double alphaG = g.getPruneValue();
 
         assert 3.0 == alphaA;
         assert 3.0 == alphaB;
@@ -48,6 +51,9 @@ public class ModelTest {
         assert 3.0 == alphaD;
         assert 5.0 == alphaE;
         assert 0.0 == alphaF;
-        assert 1.0 == alphaG;
+        assert Double.MIN_VALUE == alphaG;
+
+        Assert.assertTrue(e.isCut());
+        Assert.assertTrue(g.isCut());
     }
 }

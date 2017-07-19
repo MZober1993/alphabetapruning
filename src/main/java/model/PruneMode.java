@@ -16,20 +16,22 @@ public enum PruneMode {
         this.cutFunc = cutFunc;
     }
 
-    public void branchPrune(Branch branch){
+    public void branchPrune(Branch branch) {
         GenericTree a = branch.getA();
         GenericTree b = branch.getB();
         a.prune();
-        b.prune();
-        Double left = a.getPruneValue();
-        Double right = b.getPruneValue();
-        Double result = valFunc.apply(left,right);
-        Boolean calculateRightAgain = cutFunc.apply(left,right);
-        if(calculateRightAgain){
-            b.setPruneValue(Double.MIN_VALUE);
+        Double leftPruneValue = a.getPruneValue();
+        b.quickPrune();
+        Double rightPruneValue = b.getPruneValue();
+        Double result = valFunc.apply(leftPruneValue, rightPruneValue);
+        Boolean calculateRightAgain = cutFunc.apply(leftPruneValue, rightPruneValue);
+        if (calculateRightAgain) {
             b.prune();
-            right = b.getPruneValue();
-            result = Math.max(left, right);
+            rightPruneValue = b.getPruneValue();
+            result = valFunc.apply(leftPruneValue, rightPruneValue);
+            b.setCut(false);
+        } else {
+            b.setCut(true);
         }
         branch.setPruneValue(result);
     }
@@ -38,9 +40,21 @@ public enum PruneMode {
      * PruneMode left nodes, because the pruneValue of left nodes is set to MIN.
      * pruneMode() can also be used to recalculate right values, is pruneValue is set to MIN.
      */
-    public void nodePrune(Node node){
-        if(node.getPruneValue().equals(Double.MIN_VALUE)){
-            node.setPruneValue(valFunc.apply(node.getA(), node.getB()));
-        }
+    public void nodePrune(Node node) {
+        node.setPruneValue(valFunc.apply(node.getA(), node.getB()));
+    }
+
+    public void branchQuickPrune(Branch branch) {
+        GenericTree a = branch.getA();
+        GenericTree b = branch.getB();
+
+        a.prune();
+        branch.setPruneValue(a.getPruneValue());
+
+        b.setCut(true);
+    }
+
+    public void nodeQuickPrune(Node node) {
+        node.setPruneValue(node.getA());
     }
 }

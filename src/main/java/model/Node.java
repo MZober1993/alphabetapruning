@@ -1,7 +1,5 @@
 package model;
 
-import javafx.util.Pair;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,11 @@ public class Node extends GenericTree<Double,Double> {
     @Override
     public void prune(){
         pruneMode.nodePrune(this);
+    }
+
+    @Override
+    public void quickPrune() {
+        pruneMode.nodeQuickPrune(this);
     }
 
     @Override

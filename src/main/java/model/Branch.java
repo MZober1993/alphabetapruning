@@ -10,15 +10,16 @@ public class Branch extends GenericTree<GenericTree, GenericTree> {
 
     public Branch(GenericTree treeA, GenericTree treeB) {
         super(treeA, treeB);
-        if (treeB instanceof Node) {
-            //pruneMode-step to calculate less states
-            treeB.setPruneValue(((Node) treeB).getA());
-        }
     }
 
     @Override
     public void prune() {
         pruneMode.branchPrune(this);
+    }
+
+    @Override
+    public void quickPrune() {
+        pruneMode.branchQuickPrune(this);
     }
 
     @Override

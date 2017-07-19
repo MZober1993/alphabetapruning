@@ -7,6 +7,7 @@ public abstract class GenericTree<A, B> {
     private A a;
     private B b;
     private Double pruneValue = Double.MIN_VALUE;
+    private boolean cut;
 
     protected PruneMode pruneMode;
 
@@ -56,9 +57,19 @@ public abstract class GenericTree<A, B> {
         return depth;
     }
 
+    public void setCut(boolean cut) {
+        this.cut = cut;
+    }
+
+    public boolean isCut() {
+        return cut;
+    }
+
     public abstract void setPruneMode(PruneMode pruneMode);
 
     public abstract List<Double> findAllValues();
 
     public abstract void prune();
+
+    public abstract void quickPrune();
 }
