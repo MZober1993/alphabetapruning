@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ModelTest {
 
@@ -55,5 +56,21 @@ public class ModelTest {
 
         Assert.assertTrue(e.isCut());
         Assert.assertTrue(g.isCut());
+    }
+
+    @Test
+    public void extendedPruneWorks() {
+        Branch extendedExample = new Branch(new Branch(
+                new Branch(LEFT_NODE, new Node(5.0, -8.0))
+                , new Branch(new Node(-5.0, 0.0), new Node(1.0, -2.0))),
+                new Branch(new Branch(new Node(5.0, 6.0), new Node(5.0, -8.0))
+                        , new Branch(new Node(-5.0, 0.0), new Node(1.0, 7.0))));
+        extendedExample.setPruneMode(PruneMode.BETA);
+        extendedExample.prune();
+        Double pruneValue = extendedExample.getPruneValue();
+        boolean cut = extendedExample.getB().isCut();
+
+        assert pruneValue == 3.0;
+        assertTrue(cut);
     }
 }
